@@ -1,0 +1,78 @@
+openapi: 3.0.0
+info:
+  title: Nonton.in API
+  version: 1.0.0
+  description: This API provides movie recommendations based on user preferences.
+
+servers:
+  - url: https://Nonton.in/movie
+    description: Main (production) server
+
+paths:
+  /movies/recommendations:
+    get:
+      summary: Get movie recommendations
+      operationId: getMovieRecommendations
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "user123"
+        - name: genre
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "comedy"
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: A JSON array of recommended movie objects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+      security:
+        - bearerAuth: []
+        
+paths:
+  /movies/{movieId}:
+    get:
+      summary: Get movie details
+      operationId: getMovieDetails
+      parameters:
+        - name: movieId
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "tt0111161"
+      responses:
+        '200':
+          description: A movie object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Movie not found
+        '500':
+          description: Internal server error
+      security:
+        - bearerAuth: []
+
